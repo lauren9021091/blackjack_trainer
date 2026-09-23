@@ -8,7 +8,7 @@ const COLORS = {
 
 const DEALER_CARDS = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "A"];
 
-// Uso de Map para garantizar el orden de inserción vertical
+// Uso de Map para garantizar el orden de inserción vertical estricto
 const HARD = new Map([
   ["17–21", Array(10).fill("S")],
   ["16",    [...Array(5).fill("S"), "H", "H", "Uh", "Uh", "Uh"]],
@@ -67,9 +67,12 @@ function buildTable(containerId, strategyData) {
   // Esquina superior izquierda
   table.appendChild(createCell("Mano", "header"));
 
-  // Encabezados Dealer
-  DEALER_CARDS.forEach(card => {
-    table.appendChild(createCell(card, "header"));
+  // Encabezados Dealer (Columnas)
+  DEALER_CARDS.forEach((card, colIndex) => {
+    const colHeader = createCell(card, "header clickable-header");
+    colHeader.title = `Pintar toda la columna ${card}`;
+    colHeader.addEventListener("click", () => paintColumn(containerId, colIndex));
+    table.appendChild(colHeader);
   });
 
   // Iteración compatible con Map y Objeto
@@ -79,11 +82,19 @@ function buildTable(containerId, strategyData) {
 
   // Filas
   for (const [hand, actions] of entries) {
-    table.appendChild(createCell(hand, "header"));
+    const rowHeader = createCell(hand, "header clickable-header");
+    rowHeader.title = `Pintar toda la fila ${hand}`;
+    
+    // Array para guardar referencias de las celdas jugables de esta fila específica
+    const rowCells = [];
+    table.appendChild(rowHeader);
 
     actions.forEach(expectedAction => {
       const cell = createCell("", "playable");
-      cellStore.push({ element: cell, expected: expectedAction, userColor: null });
+      const record = { element: cell, expected: expectedAction, userColor: null };
+      
+      cellStore.push(record);
+      rowCells.push(record);
 
       // Eventos Drag to Paint
       cell.addEventListener("mousedown", () => {
@@ -97,6 +108,9 @@ function buildTable(containerId, strategyData) {
 
       table.appendChild(cell);
     });
+
+    // Evento para pintar la fila entera al hacer clic en el encabezado
+    rowHeader.addEventListener("click", () => paintRow(rowCells));
   }
 
   container.appendChild(table);
@@ -116,6 +130,28 @@ function paintCell(cellElement) {
     cellElement.style.backgroundColor = record.userColor;
     resetStatus();
   }
+}
+
+// Pintar una fila completa
+function paintRow(rowCells) {
+  rowCells.forEach(record => {
+    record.userColor = COLORS[currentAction];
+    record.element.style.backgroundColor = record.userColor;
+  });
+  resetStatus();
+}
+
+// Pintar una columna completa
+function paintColumn(containerId, colIndex) {
+  const container = document.getElementById(containerId);
+  // Las celdas jugables en el grid corresponden a la columna deseada
+  const playableCells = container.querySelectorAll(".cell.playable");
+  
+  playableCells.forEach((cell, index) => {
+    if (index % DEALER_CARDS.length === colIndex) {
+      paintCell(cell);
+    }
+  });
 }
 
 // Control global del mouse
