@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blackjack Strategy Trainer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>BLACKJACK STRATEGY TRAINER</h1>
+    <p>Selecciona una acción y arrastra el cursor sobre la tabla para practicar</p>
+  </header>
+
+  <div class="main-container">
+    <!-- Panel Izquierdo -->
+    <aside class="sidebar">
+      <h2>ACCIONES</h2>
+      <div class="palette">
+        <button class="palette-btn active" data-action="H" style="--btn-color: #34C759;">
+          <span>H</span> — Pedir (Hit)
+        </button>
+        <button class="palette-btn" data-action="S" style="--btn-color: #FF3B30;">
+          <span>S</span> — Plantarse (Stand)
+        </button>
+        <button class="palette-btn" data-action="D" style="--btn-color: #30B0C7;">
+          <span>D</span> — Doblar (Double)
+        </button>
+        <button class="palette-btn" data-action="SP" style="--btn-color: #FFCC00; color: #0F172A;">
+          <span>SP</span> — Separar (Split)
+        </button>
+      </div>
+
+      <hr>
+
+      <div class="action-buttons">
+        <button id="check-btn" class="btn btn-primary">🔎 Revisar Respuestas</button>
+        <button id="clear-btn" class="btn btn-secondary">🗑 Limpiar Tablas</button>
+      </div>
+
+      <div class="result-card">
+        <div id="result-status">SIN REVISAR</div>
+        <div id="score-details">Completa las casillas y presiona revisar</div>
+      </div>
+    </aside>
+
+    <!-- Panel Derecho (Pestañas y Tablas) -->
+    <main class="content">
+      <nav class="tabs">
+        <button class="tab-btn active" data-tab="hard">Hard Totals</button>
+        <button class="tab-btn" data-tab="soft">Soft Totals</button>
+        <button class="tab-btn" data-tab="pairs">Pairs</button>
+      </nav>
+
+      <div class="tab-content">
+        <div id="tab-hard" class="tab-pane active"></div>
+        <div id="tab-soft" class="tab-pane"></div>
+        <div id="tab-pairs" class="tab-pane"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

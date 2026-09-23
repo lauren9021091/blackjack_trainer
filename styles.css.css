@@ -1,0 +1,227 @@
+:root {
+  --bg-app: #F2F4F7;
+  --bg-card: #FFFFFF;
+  --bg-header: #1E293B;
+  --text-main: #0F172A;
+  --text-muted: #64748B;
+  --border-color: #E2E8F0;
+  --gray-error: #94A3B8;
+
+  --color-hit: #34C759;
+  --color-stand: #FF3B30;
+  --color-double: #30B0C7;
+  --color-split: #FFCC00;
+}
+
+* {
+  box-sizing: border-box;
+  user-select: none; /* Previene selección no deseada al arrastrar */
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background-color: var(--bg-app);
+  color: var(--text-main);
+}
+
+header {
+  background-color: var(--bg-header);
+  color: #F8FAFC;
+  text-align: center;
+  padding: 18px 20px;
+}
+
+header h1 {
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+}
+
+header p {
+  color: #94A3B8;
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+.main-container {
+  display: flex;
+  gap: 20px;
+  max-width: 1400px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 300px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+  flex-shrink: 0;
+}
+
+.sidebar h2 {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.palette {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.palette-btn {
+  background-color: var(--btn-color);
+  color: #FFF;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 10px 15px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.palette-btn.active {
+  outline: 3px solid var(--text-main);
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--border-color);
+  margin: 20px 0;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn {
+  border: none;
+  border-radius: 6px;
+  padding: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.btn-primary {
+  background-color: #0284C7;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #0369A1;
+}
+
+.btn-secondary {
+  background-color: #F1F5F9;
+  color: var(--text-main);
+}
+
+.btn-secondary:hover {
+  background-color: #E2E8F0;
+}
+
+.result-card {
+  background-color: #F8FAFC;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 15px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+#result-status {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--text-muted);
+}
+
+#score-details {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+  white-space: pre-line;
+}
+
+/* Tablas */
+.content {
+  flex-grow: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+  overflow-x: auto;
+}
+
+.tabs {
+  display: flex;
+  gap: 5px;
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 20px;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 10px 20px;
+  font-weight: bold;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+}
+
+.tab-btn.active {
+  color: var(--text-main);
+  border-bottom-color: #0284C7;
+}
+
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.active {
+  display: flex;
+  justify-content: center;
+}
+
+/* Grid de Estrategia */
+.strategy-table {
+  display: grid;
+  grid-template-columns: 100px repeat(10, 48px);
+  gap: 3px;
+  background-color: var(--border-color);
+  padding: 1px;
+  border-radius: 4px;
+}
+
+.cell {
+  background-color: var(--bg-card);
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.cell.header {
+  background-color: #F1F5F9;
+  color: var(--text-main);
+}
+
+.cell.playable {
+  cursor: pointer;
+  transition: filter 0.1s;
+}
+
+.cell.playable:hover {
+  filter: brightness(0.95);
+}
