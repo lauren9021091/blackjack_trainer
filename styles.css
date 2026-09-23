@@ -225,3 +225,14 @@ hr {
 .cell.playable:hover {
   filter: brightness(0.95);
 }
+
+/* Indicador visual para los encabezados cliqueables */
+.cell.header.clickable-header {
+  cursor: pointer !important;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.cell.header.clickable-header:hover {
+  background-color: #CBD5E1 !important; /* Resalta al pasar el cursor */
+  color: #0F172A;
+}
