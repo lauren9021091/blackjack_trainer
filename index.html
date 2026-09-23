@@ -3,57 +3,51 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Estrategia Básica de Blackjack</title>
+  <title>Blackjack Strategy Trainer</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="app-container">
+  <div class="container">
     <header>
-      <h1>Estrategia Básica de Blackjack</h1>
-      <p>Selecciona una acción, pinta casillas individuales o haz clic en un encabezado para pintar filas o columnas completas.</p>
+      <h1>BLACKJACK STRATEGY TRAINER</h1>
+      <p>Selecciona una acción y arrastra el cursor sobre la tabla para practicar</p>
     </header>
 
-    <!-- Controles de Paleta -->
-    <section class="palette">
-      <button class="palette-btn active" data-action="H" style="--btn-color: #34C759;">
-        Pedir (H)
-      </button>
-      <button class="palette-btn" data-action="S" style="--btn-color: #FF3B30;">
-        Plantarse (S)
-      </button>
-      <button class="palette-btn" data-action="D" style="--btn-color: #30B0C7;">
-        Doblar (D)
-      </button>
-      <button class="palette-btn" data-action="SP" style="--btn-color: #FFCC00;">
-        Dividir (SP)
-      </button>
-    </section>
+    <div class="main-layout">
+      <!-- Columna Izquierda: Pestañas, Tablas y Botones -->
+      <div class="table-section">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab('hard')">Hard Totals</button>
+          <button class="tab-btn" onclick="switchTab('soft')">Soft Totals</button>
+          <button class="tab-btn" onclick="switchTab('pairs')">Pairs</button>
+        </div>
 
-    <!-- Pestañas de Tablas -->
-    <nav class="tabs-nav">
-      <button class="tab-btn active" data-tab="hard">Hard Totals</button>
-      <button class="tab-btn" data-tab="soft">Soft Totals</button>
-      <button class="tab-btn" data-tab="pairs">Pairs</button>
-    </nav>
+        <div id="tab-hard" class="tab-content active"></div>
+        <div id="tab-soft" class="tab-content"></div>
+        <div id="tab-pairs" class="tab-content"></div>
 
-    <!-- Tablas -->
-    <main class="tabs-content">
-      <div id="tab-hard" class="tab-pane active"></div>
-      <div id="tab-soft" class="tab-pane"></div>
-      <div id="tab-pairs" class="tab-pane"></div>
-    </main>
+        <div class="action-buttons">
+          <button id="check-btn" onclick="checkAnswers()">🔍 Revisar Respuestas</button>
+          <button id="clear-btn" onclick="clearTables()">🗑️ Limpiar Tablas</button>
+        </div>
 
-    <!-- Panel de Resultados y Acciones -->
-    <footer class="controls-panel">
-      <div class="actions">
-        <button id="check-btn" class="action-btn primary">Revisar</button>
-        <button id="clear-btn" class="action-btn secondary">Limpiar</button>
+        <div class="results">
+          <div id="result-status">SIN REVISAR</div>
+          <div id="score-details">Completa las casillas y presiona revisar</div>
+        </div>
       </div>
-      <div class="status-box">
-        <div id="result-status">SIN REVISAR</div>
-        <div id="score-details">Completa las casillas y presiona revisar</div>
+
+      <!-- Columna Derecha: Paleta de Acciones -->
+      <div class="palette-section">
+        <h2>ACCIONES</h2>
+        <div class="palette-buttons">
+          <button class="palette-btn active" data-action="H" onclick="setAction('H')">H — Pedir (Hit)</button>
+          <button class="palette-btn" data-action="S" onclick="setAction('S')">S — Plantarse (Stand)</button>
+          <button class="palette-btn" data-action="D" onclick="setAction('D')">D — Doblar (Double)</button>
+          <button class="palette-btn" data-action="SP" onclick="setAction('SP')">SP — Separar (Split)</button>
+        </div>
       </div>
-    </footer>
+    </div>
   </div>
 
   <script src="script.js"></script>
