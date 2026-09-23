@@ -34,14 +34,17 @@ header p {
   margin-top: 4px;
 }
 
+/* Layout en 2 columnas rígidas (evita desmoronarse) */
 .main-layout {
   display: flex;
   gap: 32px;
   align-items: flex-start;
+  flex-wrap: nowrap;
 }
 
 .table-section {
   flex: 1;
+  min-width: 0;
 }
 
 /* Pestañas */
@@ -77,12 +80,13 @@ header p {
   background-color: #2563eb;
 }
 
+/* Control estricto de ocultar/mostrar pestañas */
 .tab-content {
-  display: none;
+  display: none !important;
 }
 
 .tab-content.active {
-  display: block;
+  display: block !important;
 }
 
 /* Grid de la Tabla */
@@ -166,9 +170,10 @@ header p {
   margin-top: 2px;
 }
 
-/* Paleta Lateral */
+/* Paleta Lateral Fija */
 .palette-section {
-  width: 240px;
+  width: 220px;
+  flex-shrink: 0;
 }
 
 .palette-section h2 {
