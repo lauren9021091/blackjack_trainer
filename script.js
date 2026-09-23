@@ -1,4 +1,3 @@
-// Configuración de Colores
 const COLORS = {
   H: "#34C759",
   S: "#FF3B30",
@@ -8,7 +7,7 @@ const COLORS = {
 
 const DEALER_CARDS = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "A"];
 
-// Map para garantizar el orden vertical descendente exacto (Wikipedia)
+// Map para garantizar el orden descendente de Wikipedia
 const HARD = new Map([
   ["17–21", Array(10).fill("S")],
   ["16",    [...Array(5).fill("S"), "H", "H", "Uh", "Uh", "Uh"]],
@@ -45,7 +44,6 @@ const PAIRS = {
   "2,2–3,3": [...Array(7).fill("SP"), "H", "H", "H"]
 };
 
-// Estado global
 let currentAction = 'H';
 let isMouseDown = false;
 const cellStore = [];
@@ -58,25 +56,18 @@ function getActionColor(action) {
   return "#FFFFFF";
 }
 
-// Construcción de Tablas
 function buildTable(containerId, strategyData) {
   const container = document.getElementById(containerId);
   const table = document.createElement("div");
   table.className = "strategy-table";
 
-  // Esquina superior izquierda
   table.appendChild(createCell("Mano", "header"));
 
-  // Encabezados de Columna (Dealer Cards)
+  // Columnas (Dealer)
   DEALER_CARDS.forEach((card, colIndex) => {
     const colHeader = createCell(card, "header clickable-header");
     colHeader.title = `Pintar columna ${card}`;
-    
-    // Clic en la carta del Dealer pinta toda la columna
-    colHeader.addEventListener("click", () => {
-      paintGroup(table, `[data-col="${colIndex}"]`);
-    });
-    
+    colHeader.addEventListener("click", () => paintGroup(table, `[data-col="${colIndex}"]`));
     table.appendChild(colHeader);
   });
 
@@ -91,24 +82,18 @@ function buildTable(containerId, strategyData) {
     rowHeader.title = `Pintar fila ${hand}`;
     
     const currentRow = rowIndex;
-    // Clic en el nombre/número de la mano pinta toda la fila
-    rowHeader.addEventListener("click", () => {
-      paintGroup(table, `[data-row="${currentRow}"]`);
-    });
+    rowHeader.addEventListener("click", () => paintGroup(table, `[data-row="${currentRow}"]`));
 
     table.appendChild(rowHeader);
 
     actions.forEach((expectedAction, colIndex) => {
       const cell = createCell("", "playable");
-      
-      // Asignamos data attributes para seleccionar directamente por fila/columna
       cell.setAttribute("data-row", currentRow);
       cell.setAttribute("data-col", colIndex);
 
       const record = { element: cell, expected: expectedAction, userColor: null };
       cellStore.push(record);
 
-      // Eventos de arrastre para pintar (Drag to Paint)
       cell.addEventListener("mousedown", () => {
         isMouseDown = true;
         paintCell(cell);
@@ -143,39 +128,30 @@ function paintCell(cellElement) {
   }
 }
 
-// Pintar grupo entero por selector
 function paintGroup(tableElement, selector) {
   const cells = tableElement.querySelectorAll(`.cell.playable${selector}`);
-  cells.forEach(cell => {
-    paintCell(cell);
+  cells.forEach(cell => paintCell(cell));
+}
+
+function setAction(action) {
+  currentAction = action;
+  document.querySelectorAll(".palette-btn").forEach(btn => {
+    btn.classList.remove("active");
+    if (btn.dataset.action === action) {
+      btn.classList.add("active");
+    }
   });
 }
 
-// Control global del mouse
-document.addEventListener("mouseup", () => { isMouseDown = false; });
+function switchTab(tabName) {
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
 
-// Botones de paleta
-document.querySelectorAll(".palette-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".palette-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    currentAction = btn.dataset.action;
-  });
-});
+  event.target.classList.add("active");
+  document.getElementById(`tab-${tabName}`).classList.add("active");
+}
 
-// Navegación entre pestañas
-document.querySelectorAll(".tab-btn").forEach(tab => {
-  tab.addEventListener("click", () => {
-    document.querySelectorAll(".tab-btn").forEach(t => t.classList.remove("active"));
-    document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
-    
-    tab.classList.add("active");
-    document.getElementById(`tab-${tab.dataset.tab}`).classList.add("active");
-  });
-});
-
-// Revisión de respuestas
-document.getElementById("check-btn").addEventListener("click", () => {
+function checkAnswers() {
   let correct = 0;
   let errors = 0;
 
@@ -197,25 +173,26 @@ document.getElementById("check-btn").addEventListener("click", () => {
   statusLbl.style.color = percentage == 100 ? COLORS.H : percentage >= 70 ? "#D97706" : COLORS.S;
 
   document.getElementById("score-details").textContent = 
-    `Correctas: ${correct}\nIncorrectas: ${errors}\nTotal: ${total}`;
-});
+    `Correctas: ${correct} | Incorrectas: ${errors} | Total: ${total}`;
+}
 
-// Limpieza de tablas
-document.getElementById("clear-btn").addEventListener("click", () => {
+function clearTables() {
   cellStore.forEach(item => {
     item.userColor = null;
     item.element.style.backgroundColor = "#FFFFFF";
   });
   resetStatus();
-});
+}
 
 function resetStatus() {
   document.getElementById("result-status").textContent = "SIN REVISAR";
-  document.getElementById("result-status").style.color = "#64748B";
+  document.getElementById("result-status").style.color = "#334155";
   document.getElementById("score-details").textContent = "Completa las casillas y presiona revisar";
 }
 
-// Inicializar tablas
+document.addEventListener("mouseup", () => { isMouseDown = false; });
+
+// Inicializar
 buildTable("tab-hard", HARD);
 buildTable("tab-soft", SOFT);
 buildTable("tab-pairs", PAIRS);
