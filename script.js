@@ -7,7 +7,7 @@ const COLORS = {
 
 const DEALER_CARDS = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "A"];
 
-// Map para garantizar el orden descendente de Wikipedia
+// Map para garantizar el orden descendente exacto de Wikipedia
 const HARD = new Map([
   ["17–21", Array(10).fill("S")],
   ["16",    [...Array(5).fill("S"), "H", "H", "Uh", "Uh", "Uh"]],
@@ -147,8 +147,14 @@ function switchTab(tabName) {
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
   document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
 
-  event.target.classList.add("active");
-  document.getElementById(`tab-${tabName}`).classList.add("active");
+  if (window.event && window.event.target) {
+    window.event.target.classList.add("active");
+  }
+  
+  const targetPane = document.getElementById(`tab-${tabName}`);
+  if (targetPane) {
+    targetPane.classList.add("active");
+  }
 }
 
 function checkAnswers() {
