@@ -9,16 +9,17 @@ const COLORS = {
 const DEALER_CARDS = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "A"];
 
 const HARD = {
-  "18–21": Array(10).fill("S"),
-  "17": [...Array(9).fill("S"), "Us"],
-  "16": [...Array(5).fill("S"), "H", "H", "Uh", "Uh", "Uh"],
-  "15": [...Array(5).fill("S"), "H", "H", "H", "Uh", "Uh"],
-  "13–14": [...Array(5).fill("S"), ...Array(5).fill("H")],
-  "12": ["H", "H", "S", "S", "S", "H", "H", "H", "H", "H"],
-  "11": Array(10).fill("Dh"),
-  "10": [...Array(8).fill("Dh"), "H", "H"],
-  "9": ["H", "Dh", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"],
-  "5–8": Array(10).fill("H")
+  "17–21": Array(10).fill("S"),
+  "16":    [...Array(5).fill("S"), "H", "H", "Uh", "Uh", "Uh"],
+  "15":    [...Array(5).fill("S"), "H", "H", "H", "Uh", "Uh"],
+  "14":    [...Array(5).fill("S"), ...Array(5).fill("H")],
+  "13":    [...Array(5).fill("S"), ...Array(5).fill("H")],
+  "12":    ["H", "H", "S", "S", "S", "H", "H", "H", "H", "H"],
+  "11":    Array(10).fill("Dh"),
+  "10":    [...Array(8).fill("Dh"), "H", "H"],
+  "9":     ["H", "Dh", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"],
+  "8":     Array(10).fill("H"),
+  "5–7":   Array(10).fill("H")
 };
 
 const SOFT = {
