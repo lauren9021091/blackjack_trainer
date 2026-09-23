@@ -1,4 +1,4 @@
-// Configuración de Datos y Colores
+// Configuración de Colores
 const COLORS = {
   H: "#34C759",
   S: "#FF3B30",
@@ -8,19 +8,20 @@ const COLORS = {
 
 const DEALER_CARDS = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "A"];
 
-const HARD = {
-  "17–21": Array(10).fill("S"),
-  "16":    [...Array(5).fill("S"), "H", "H", "Uh", "Uh", "Uh"],
-  "15":    [...Array(5).fill("S"), "H", "H", "H", "Uh", "Uh"],
-  "14":    [...Array(5).fill("S"), ...Array(5).fill("H")],
-  "13":    [...Array(5).fill("S"), ...Array(5).fill("H")],
-  "12":    ["H", "H", "S", "S", "S", "H", "H", "H", "H", "H"],
-  "11":    Array(10).fill("Dh"),
-  "10":    [...Array(8).fill("Dh"), "H", "H"],
-  "9":     ["H", "Dh", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"],
-  "8":     Array(10).fill("H"),
-  "5–7":   Array(10).fill("H")
-};
+// Uso de Map para garantizar el orden de inserción vertical
+const HARD = new Map([
+  ["17–21", Array(10).fill("S")],
+  ["16",    [...Array(5).fill("S"), "H", "H", "Uh", "Uh", "Uh"]],
+  ["15",    [...Array(5).fill("S"), "H", "H", "H", "Uh", "Uh"]],
+  ["14",    [...Array(5).fill("S"), ...Array(5).fill("H")]],
+  ["13",    [...Array(5).fill("S"), ...Array(5).fill("H")]],
+  ["12",    ["H", "H", "S", "S", "S", "H", "H", "H", "H", "H"]],
+  ["11",    Array(10).fill("Dh")],
+  ["10",    [...Array(8).fill("Dh"), "H", "H"]],
+  ["9",     ["H", "Dh", "Dh", "Dh", "Dh", "H", "H", "H", "H", "H"]],
+  ["8",     Array(10).fill("H")],
+  ["5–7",   Array(10).fill("H")]
+]);
 
 const SOFT = {
   "A,9": Array(10).fill("S"),
@@ -57,7 +58,7 @@ function getActionColor(action) {
   return "#FFFFFF";
 }
 
-// Inicialización de Tablas
+// Construcción de Tablas
 function buildTable(containerId, strategyData) {
   const container = document.getElementById(containerId);
   const table = document.createElement("div");
@@ -71,8 +72,13 @@ function buildTable(containerId, strategyData) {
     table.appendChild(createCell(card, "header"));
   });
 
+  // Iteración compatible con Map y Objeto
+  const entries = strategyData instanceof Map 
+    ? strategyData.entries() 
+    : Object.entries(strategyData);
+
   // Filas
-  Object.entries(strategyData).forEach(([hand, actions]) => {
+  for (const [hand, actions] of entries) {
     table.appendChild(createCell(hand, "header"));
 
     actions.forEach(expectedAction => {
@@ -91,7 +97,7 @@ function buildTable(containerId, strategyData) {
 
       table.appendChild(cell);
     });
-  });
+  }
 
   container.appendChild(table);
 }
@@ -112,10 +118,10 @@ function paintCell(cellElement) {
   }
 }
 
-// Control global del soltar mouse
+// Control global del mouse
 document.addEventListener("mouseup", () => { isMouseDown = false; });
 
-// Paleta de acciones
+// Botones de paleta
 document.querySelectorAll(".palette-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll(".palette-btn").forEach(b => b.classList.remove("active"));
@@ -124,7 +130,7 @@ document.querySelectorAll(".palette-btn").forEach(btn => {
   });
 });
 
-// Navegación Pestañas
+// Navegación entre pestañas
 document.querySelectorAll(".tab-btn").forEach(tab => {
   tab.addEventListener("click", () => {
     document.querySelectorAll(".tab-btn").forEach(t => t.classList.remove("active"));
@@ -135,7 +141,7 @@ document.querySelectorAll(".tab-btn").forEach(tab => {
   });
 });
 
-// Revisión de Respuestas
+// Revisión de respuestas
 document.getElementById("check-btn").addEventListener("click", () => {
   let correct = 0;
   let errors = 0;
@@ -161,7 +167,7 @@ document.getElementById("check-btn").addEventListener("click", () => {
     `Correctas: ${correct}\nIncorrectas: ${errors}\nTotal: ${total}`;
 });
 
-// Limpieza
+// Limpieza de tablas
 document.getElementById("clear-btn").addEventListener("click", () => {
   cellStore.forEach(item => {
     item.userColor = null;
@@ -176,7 +182,7 @@ function resetStatus() {
   document.getElementById("score-details").textContent = "Completa las casillas y presiona revisar";
 }
 
-// Renderizar todo
+// Inicializar tablas
 buildTable("tab-hard", HARD);
 buildTable("tab-soft", SOFT);
 buildTable("tab-pairs", PAIRS);
