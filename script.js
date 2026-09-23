@@ -8,7 +8,7 @@ const COLORS = {
 
 const DEALER_CARDS = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "A"];
 
-// Uso de Map para garantizar el orden de inserción vertical estricto
+// Map para garantizar el orden vertical descendente exacto (Wikipedia)
 const HARD = new Map([
   ["17–21", Array(10).fill("S")],
   ["16",    [...Array(5).fill("S"), "H", "H", "Uh", "Uh", "Uh"]],
@@ -67,36 +67,48 @@ function buildTable(containerId, strategyData) {
   // Esquina superior izquierda
   table.appendChild(createCell("Mano", "header"));
 
-  // Encabezados Dealer (Columnas)
+  // Encabezados de Columna (Dealer Cards)
   DEALER_CARDS.forEach((card, colIndex) => {
     const colHeader = createCell(card, "header clickable-header");
-    colHeader.title = `Pintar toda la columna ${card}`;
-    colHeader.addEventListener("click", () => paintColumn(containerId, colIndex));
+    colHeader.title = `Pintar columna ${card}`;
+    
+    // Clic en la carta del Dealer pinta toda la columna
+    colHeader.addEventListener("click", () => {
+      paintGroup(table, `[data-col="${colIndex}"]`);
+    });
+    
     table.appendChild(colHeader);
   });
 
-  // Iteración compatible con Map y Objeto
   const entries = strategyData instanceof Map 
     ? strategyData.entries() 
     : Object.entries(strategyData);
 
   // Filas
+  let rowIndex = 0;
   for (const [hand, actions] of entries) {
     const rowHeader = createCell(hand, "header clickable-header");
-    rowHeader.title = `Pintar toda la fila ${hand}`;
+    rowHeader.title = `Pintar fila ${hand}`;
     
-    // Array para guardar referencias de las celdas jugables de esta fila específica
-    const rowCells = [];
+    const currentRow = rowIndex;
+    // Clic en el nombre/número de la mano pinta toda la fila
+    rowHeader.addEventListener("click", () => {
+      paintGroup(table, `[data-row="${currentRow}"]`);
+    });
+
     table.appendChild(rowHeader);
 
-    actions.forEach(expectedAction => {
+    actions.forEach((expectedAction, colIndex) => {
       const cell = createCell("", "playable");
-      const record = { element: cell, expected: expectedAction, userColor: null };
       
-      cellStore.push(record);
-      rowCells.push(record);
+      // Asignamos data attributes para seleccionar directamente por fila/columna
+      cell.setAttribute("data-row", currentRow);
+      cell.setAttribute("data-col", colIndex);
 
-      // Eventos Drag to Paint
+      const record = { element: cell, expected: expectedAction, userColor: null };
+      cellStore.push(record);
+
+      // Eventos de arrastre para pintar (Drag to Paint)
       cell.addEventListener("mousedown", () => {
         isMouseDown = true;
         paintCell(cell);
@@ -109,8 +121,7 @@ function buildTable(containerId, strategyData) {
       table.appendChild(cell);
     });
 
-    // Evento para pintar la fila entera al hacer clic en el encabezado
-    rowHeader.addEventListener("click", () => paintRow(rowCells));
+    rowIndex++;
   }
 
   container.appendChild(table);
@@ -132,25 +143,11 @@ function paintCell(cellElement) {
   }
 }
 
-// Pintar una fila completa
-function paintRow(rowCells) {
-  rowCells.forEach(record => {
-    record.userColor = COLORS[currentAction];
-    record.element.style.backgroundColor = record.userColor;
-  });
-  resetStatus();
-}
-
-// Pintar una columna completa
-function paintColumn(containerId, colIndex) {
-  const container = document.getElementById(containerId);
-  // Las celdas jugables en el grid corresponden a la columna deseada
-  const playableCells = container.querySelectorAll(".cell.playable");
-  
-  playableCells.forEach((cell, index) => {
-    if (index % DEALER_CARDS.length === colIndex) {
-      paintCell(cell);
-    }
+// Pintar grupo entero por selector
+function paintGroup(tableElement, selector) {
+  const cells = tableElement.querySelectorAll(`.cell.playable${selector}`);
+  cells.forEach(cell => {
+    paintCell(cell);
   });
 }
 
@@ -188,7 +185,7 @@ document.getElementById("check-btn").addEventListener("click", () => {
       correct++;
     } else {
       errors++;
-      item.element.style.backgroundColor = "#94A3B8"; // Gris de error
+      item.element.style.backgroundColor = "#94A3B8";
     }
   });
 
