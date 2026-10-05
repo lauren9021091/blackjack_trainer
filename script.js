@@ -32,16 +32,19 @@ const SOFT = {
   "A,A*": ["H", "H", "H", "H", "Dh", "H", "H", "H", "H", "H"]
 };
 
+// PAIRS corregido contra la tabla de Wikipedia (4-8 decks, S17... dealer hits soft 17,
+// DAS permitido). Opciones de surrender (Uh/Us/Usp) no se usan aquí por pedido del usuario;
+// donde Wikipedia marca surrender como respaldo, se usa directamente la acción base.
 const PAIRS = {
   "A,A": Array(10).fill("SP"),
   "10,10": Array(10).fill("S"),
   "9,9": ["SP", "SP", "SP", "SP", "SP", "S", "SP", "SP", "S", "S"],
-  "8,8": [...Array(9).fill("SP"), "Usp"],
-  "7,7": [...Array(7).fill("SP"), "H", "H", "H"],
+  "8,8": Array(10).fill("SP"),
+  "7,7": [...Array(6).fill("SP"), "H", "H", "H", "H"],
   "6,6": [...Array(5).fill("SP"), ...Array(5).fill("H")],
-  "5,5": [...Array(7).fill("Dh"), "H", "H", "H"],
+  "5,5": [...Array(8).fill("Dh"), "H", "H"],
   "4,4": ["H", "H", "H", "SP", "SP", "H", "H", "H", "H", "H"],
-  "2,2–3,3": [...Array(7).fill("SP"), "H", "H", "H"]
+  "2,2–3,3": [...Array(6).fill("SP"), "H", "H", "H", "H"]
 };
 
 let currentAction = 'H';
